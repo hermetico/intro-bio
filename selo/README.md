@@ -15,3 +15,9 @@ In order to run the code just run
 python selo.py [filename]
 
 If no filename is added, selo will use the file called 'demo-input.txt' and will create a png called 'demo-input.png'
+
+Made with love by
+
+* Katharina Krabel
+* Malte Steinke
+* Juan Marin

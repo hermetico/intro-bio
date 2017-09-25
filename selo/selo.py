@@ -1,12 +1,14 @@
-from math import log
+from math import log, ceil
 
+import sys
 from matplotlib import transforms
 import matplotlib as mpl
 from matplotlib.font_manager import FontProperties
 import matplotlib.patheffects
 import matplotlib.pyplot as plt
 import numpy as np
-import seaborn
+#import seaborn
+
 
 COLOR_SCHEME = {'A': 'black',
                 'B': 'rosybrown',
@@ -39,15 +41,17 @@ plt.style.use('seaborn-ticks')
 
 
 def different_letters( lines ):
-    seen = []
+    """Returns an array with the different letters contained by the array of lines"""
+    seen = {}
     for line in lines:
         for ch in line:
             if ch not in seen:
-                seen.append(ch)
-    return seen
+                seen[ch] = None
+    return seen.keys()
 
 
 def background_freq( aas, seqs ):
+    """Computes the background freq"""
     freq = np.zeros((aas.shape[0]))
     for i, ch in enumerate( aas ):
         freq[i] = np.sum( seqs == ch)
@@ -128,6 +132,17 @@ def sort_scores(scores_to_sort):
     return sorted_list
 
 
+def show_contributions_table( contributions ):
+    """Pretty prints the contributions table with 5 decimals"""
+    for i in range(contributions.shape[0]):
+        for j in range(contributions.shape[1]):
+            print "%.5f" % contributions[i][j],
+        print
+
+
+def most_likely_word(contributions, aas):
+    print ''.join(aas[np.argmax(contributions, axis=0)])
+
 class Scale(matplotlib.patheffects.RendererBase):
     def __init__(self, sx, sy=None):
         self._sx = sx
@@ -139,25 +154,27 @@ class Scale(matplotlib.patheffects.RendererBase):
 
 
         
-def draw_logo(all_scores, fontfamily='Arial', size=80):
-    if fontfamily == 'xkcd':
-        plt.xkcd()
+def draw_logo(all_scores, size=40, filename="plot.png", ymax=2):
+    if sys.platform == 'win32':
+        font_family = 'Arial'
     else:
-        mpl.rcParams['font.family'] = fontfamily
+        font_family = 'DejaVu Sans'
 
-    fig, ax = plt.subplots(figsize=(len(all_scores), 2.5))
+    mpl.rcParams['font.family'] = font_family
+
+    fig, ax = plt.subplots(figsize=(len(all_scores), 5))
 
     font = FontProperties()
     font.set_size(size)
     font.set_weight('bold')
     
-    font.set_family(fontfamily)
+    font.set_family(font_family)
 
     ax.set_xticks(range(1,len(all_scores)+1))    
-    ax.set_yticks(range(0,3))
+    ax.set_yticks(range(0,ymax))
     ax.set_xticklabels(range(1,len(all_scores)+1), rotation=90)
-    ax.set_yticklabels(np.arange(0,3,1))    
-    seaborn.despine(ax=ax, trim=True)
+    ax.set_yticklabels(np.arange(0,ymax))
+    #seaborn.despine(ax=ax, trim=True)
     
     trans_offset = transforms.offset_copy(ax.transData, 
                                           fig=fig, 
@@ -168,20 +185,20 @@ def draw_logo(all_scores, fontfamily='Arial', size=80):
     for index, scores in enumerate(all_scores):
         yshift = 0
         for base, score in scores:
-            txt = ax.text(index+1, 
+            txt = ax.text(index + 1,
                           0, 
                           base, 
                           transform=trans_offset,
-                          fontsize=80, 
+                          fontsize=size,
                           color=COLOR_SCHEME[base],
                           ha='center',
                           fontproperties=font,
 
                          )
-            txt.set_path_effects([Scale(1.0, score)])
+            txt.set_path_effects([Scale(0.7, score)])
             fig.canvas.draw()
             window_ext = txt.get_window_extent(txt._renderer)
-            yshift = window_ext.height*score
+            yshift = window_ext.height * score
             trans_offset = transforms.offset_copy(txt._transform, 
                                                   fig=fig,
                                                   y=yshift,
@@ -190,22 +207,49 @@ def draw_logo(all_scores, fontfamily='Arial', size=80):
                                               fig=fig, 
                                               x=1, 
                                               y=0, 
-                                              units='points')    
-    plt.show()
+                                              units='points')
+    plt.savefig( filename )
 
-selo_input = get_from_file("selo_input.txt")
+if __name__ == '__main__':
 
-SEQs = np.array( selo_input, dtype=str)
-AAs = np.array(different_letters( selo_input ))
-L = len( SEQs[0] )
-PI = background_freq( AAs, SEQs )
-P = prob_distribution(AAs, SEQs)
-H = entropy(P, PI, SEQs)
-RH = relative_entropy(P, PI, SEQs)
-C = contributions( P, RH)
 
-scores = create_scores(C, AAs)
+    ## initial setup
+    sys.argv += ['demo-input.txt']
+    input_file = sys.argv[1]
+    plot_file = input_file.split('.')[0] + '.png'
+    selo_input = get_from_file(input_file)
 
-sorted_scores = sort_scores(scores)
+    ## convert the input sequences to a numpy array
+    SEQs = np.array( selo_input, dtype=str)
 
-draw_logo(sorted_scores)
+    ## converts the array of different letters to a numpy array
+    AAs = np.array(different_letters( selo_input ))
+    L = len( SEQs[0] ) # the length of each sequence, assumes all the seqs have the same length
+
+    PI = background_freq( AAs, SEQs )
+    P = prob_distribution(AAs, SEQs)
+    H = entropy(P, PI, SEQs)
+    RH = relative_entropy(P, PI, SEQs)
+    C = contributions(P, RH)
+    #
+    print
+    print "Contributions:"
+    print
+    show_contributions_table( C )
+    # computing the scores from the contributions and que array of letters
+    scores = create_scores(C, AAs)
+    sorted_scores = sort_scores(scores)
+
+    print
+    print "The most likely word is:"
+    print
+    most_likely_word(C, AAs)
+
+    print
+    print "Storing plot in file: " + plot_file
+    print
+
+    ymax = int(ceil(log(max(np.sum(C,axis=0)), 2)))
+    draw_logo(sorted_scores, filename=plot_file, ymax=ymax)
+
+    print "BYE"
