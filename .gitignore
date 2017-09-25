@@ -1,4 +1,5 @@
 # virtualenvs
+.idea/
 selo/venv/
 selo/.idea
 # Byte-compiled / optimized / DLL files

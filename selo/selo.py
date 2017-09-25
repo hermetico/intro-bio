@@ -1,6 +1,4 @@
 from math import log
-#regular expressions lib to extract values within single quotes
-import re
 
 from matplotlib import transforms
 import matplotlib as mpl
@@ -9,14 +7,36 @@ import matplotlib.patheffects
 import matplotlib.pyplot as plt
 import numpy as np
 import seaborn
-from gtk._gtk import PositionType
+
+COLOR_SCHEME = {'A': 'black',
+                'B': 'rosybrown',
+                'C': 'firebrick',
+                'D': 'tan',
+                'E': 'gold',
+                'F': 'olivedrab',
+                'G': 'chartreuse',
+                'H': 'darkgreen',
+                'I': 'lightseagreen',
+                'J': 'deepskyblue',
+                'K': 'blue',
+                'L': 'palevioletred',
+                'M': 'orange',
+                'N': 'salmon',
+                'O': 'purple',
+                'P': 'cyan',
+                'Q': 'orange',
+                'R': 'yellow',
+                'S': 'olive',
+                'T': 'indigo',
+                'U': 'dodgerblue',
+                'V': 'navajowhite',
+                'W': 'fuchsia',
+                'X': 'brown',
+                'Y': 'deeppink',
+                'Z': 'darkorchid'}
 
 plt.style.use('seaborn-ticks')
 
-def elog( x ):
-    if x == 0.0:
-        return -np.inf
-    return log(x, 2)
 
 def different_letters( lines ):
     seen = []
@@ -26,41 +46,45 @@ def different_letters( lines ):
                 seen.append(ch)
     return seen
 
+
 def background_freq( aas, seqs ):
     freq = np.zeros((aas.shape[0]))
     for i, ch in enumerate( aas ):
         freq[i] = np.sum( seqs == ch)
-    return freq #/ (seqs.shape[0] * seqs.shape[1])
+    return freq
+
 
 def prob_distribution( aas, seqs):
     """Computes the probability of finding an aminoacid at certain 
     position in a sequence, aligning the secuences"""
     P = np.zeros((aas.shape[0], seqs.shape[1]))
     for i in range(aas.shape[0]):
-        # counts all appearancespp.pprint(test)
+        # counts all appearances ##pp.pprint(test)
         # sum(axis=0) sums num of appearances by column
         appearances = (seqs == aas[i]).sum(axis=0)
         P[i] += appearances
     return P * (1.0 / seqs.shape[0])
 
+
 def entropy( probs, pi, seqs):
     H = np.zeros(seqs.shape[1])
     for j in range(seqs.shape[1]):
-        summatory = 0.0
+        accum = 0.0
         for i in range(pi.shape[0]):
             if probs[i][j] != 0.0:
-                summatory += probs[i][j] * log(probs[i][j], 2)
-        H[j] = -summatory
+                accum += probs[i][j] * log(probs[i][j], 2)
+        H[j] = -accum
     return H
+
 
 def relative_entropy( probs, pi, seqs):
     RH = np.zeros(seqs.shape[1])
     for j in range(seqs.shape[1]):
-        summatory = 0.0
+        accum = 0.0
         for i in range(pi.shape[0]):
             if probs[i][j] != 0.0 and pi[i] != 0:
-                summatory += probs[i][j] * log(probs[i][j] / pi[i], 2)
-        RH[j] = -summatory
+                accum += probs[i][j] * log(probs[i][j] / pi[i], 2)
+        RH[j] = -accum
     return RH
 
 def contributions( probs, rel_ent):
@@ -76,12 +100,14 @@ def get_from_file(fname):
     result = []
     with open(fname) as f:
         for line in f:
-            innerList =  [ch for ch in line.strip()]
+            innerList = [ch for ch in line.strip()]
             if(innerList):
                 result.append(innerList)
     return result
-        
+
+
 def create_scores( probs , aas):
+    """Creates the scores for the plot"""
     scores = []
     for i in range(probs.shape[1]):
         position = []
@@ -92,50 +118,26 @@ def create_scores( probs , aas):
 
     return scores
 
+
 def sort_scores(scores_to_sort):
-    """sorts the scores with regards to the second value in the nested list """
+    """sorts the scores with regards to the second value in the nested list"""
     sorted_list = []
     for i in scores_to_sort:
         i = sorted(i, key = lambda x: x[1])
         sorted_list.append(i)
     return sorted_list
-    
+
+
 class Scale(matplotlib.patheffects.RendererBase):
     def __init__(self, sx, sy=None):
         self._sx = sx
         self._sy = sy
 
     def draw_path(self, renderer, gc, tpath, affine, rgbFace):
-        affine = affine.identity().scale(self._sx, self._sy)+affine
+        affine = affine.identity().scale(self._sx, self._sy) + affine
         renderer.draw_path(gc, tpath, affine, rgbFace)
 
-COLOR_SCHEME = {'A': 'black', 
-                'B': 'rosybrown', 
-                'C': 'firebrick', 
-                'D': 'tan',
-                'E': 'gold', 
-                'F': 'olivedrab', 
-                'G': 'chartreuse', 
-                'H': 'darkgreen',
-                'I': 'lightseagreen', 
-                'J': 'deepskyblue', 
-                'K': 'blue', 
-                'L': 'palevioletred',
-                'M': 'orange', 
-                'N': 'salmon', 
-                'O': 'purple', 
-                'P': 'cyan',
-                'Q': 'orange', 
-                'R': 'yellow', 
-                'S': 'olive', 
-                'T': 'indigo',
-                'U': 'dodgerblue', 
-                'V': 'navajowhite', 
-                'W': 'fuchsia', 
-                'X': 'brown',
-                'Y': 'deeppink', 
-                'Z': 'darkorchid'}
-                
+
         
 def draw_logo(all_scores, fontfamily='Arial', size=80):
     if fontfamily == 'xkcd':
