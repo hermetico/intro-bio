@@ -63,7 +63,7 @@ def prob_distribution( aas, seqs):
     position in a sequence, aligning the secuences"""
     P = np.zeros((aas.shape[0], seqs.shape[1]))
     for i in range(aas.shape[0]):
-        # counts all appearances ##pp.pprint(test)
+        # counts all appearances  by column
         # sum(axis=0) sums num of appearances by column
         appearances = (seqs == aas[i]).sum(axis=0)
         P[i] += appearances
@@ -76,6 +76,8 @@ def entropy( probs, pi, seqs):
         accum = 0.0
         for i in range(pi.shape[0]):
             if probs[i][j] != 0.0:
+                # the sum in a sequence column of the probability of each letter times the logarithm in base 2
+                # of the probability of a letter divided by its background freq
                 accum += probs[i][j] * log(probs[i][j], 2)
         H[j] = -accum
     return H
@@ -86,7 +88,9 @@ def relative_entropy( probs, pi, seqs):
     for j in range(seqs.shape[1]):
         accum = 0.0
         for i in range(pi.shape[0]):
-            if probs[i][j] != 0.0 and pi[i] != 0:
+            if probs[i][j] != 0.0 and pi[i] != 0: # avoiding zeros
+                # the sum in a sequence column of the probability of each letter times the logarithm in base 2
+                # of the probability of a letter divided by its background freq
                 accum += probs[i][j] * log(probs[i][j] / pi[i], 2)
         RH[j] = -accum
     return RH
@@ -95,6 +99,7 @@ def contributions( probs, rel_ent):
     C = np.zeros(probs.shape)
     for i in range(probs.shape[0]):
         for j in range(probs.shape[1]):
+            # the probabilty of a letter times the relative entropy in that sequence column
             C[i][j] = probs[i][j] * rel_ent[j]
     return C
  
