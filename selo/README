@@ -1,3 +1,4 @@
+### Setup
 Selo.py uses python 2.7 and two packages that are not included in the standard library. These are numpy and matplotlib
 and can be installed using PIP just running:
 
@@ -8,6 +9,7 @@ Depending on your python distribution you might need to install python TKinter. 
 sudo apt install python-tk
 
 
+### Running SELO
 In order to run the code just run
 
 python selo.py [filename]
