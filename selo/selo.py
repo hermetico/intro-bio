@@ -102,8 +102,12 @@ def contributions( probs, rel_ent):
             # the probabilty of a letter times the relative entropy in that sequence column
             C[i][j] = probs[i][j] * rel_ent[j]
     return C
- 
- 
+
+
+def information_content( probs, aas, rel_ent):
+    return log(aas.shape[0]) -rel_ent
+
+
 def get_from_file(fname):
     """ reads data from file and writes values into a nested list"""
     result = []
@@ -233,9 +237,15 @@ if __name__ == '__main__':
 
     PI = background_freq( AAs, SEQs )
     P = prob_distribution(AAs, SEQs)
+    print P
     H = entropy(P, PI, SEQs)
     RH = relative_entropy(P, PI, SEQs)
     C = contributions(P, RH)
+    I = information_content(P, AAs, RH)
+
+    # we use the same function, but its not the contributions
+    information_whateva = contributions
+    C = -1 * information_whateva(P, I)
     #
     print
     print "Contributions:"
