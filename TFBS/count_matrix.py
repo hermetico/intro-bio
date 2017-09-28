@@ -1,14 +1,14 @@
 from math import log
 import numpy as np
 
-def read_sequences_from_file:
-        result = []
+def read_sequences_from_file(fname):
+    sequences = []
     with open(fname) as f:
         for line in f:
-            innerList =  [ch for ch in line.strip()]
+            innerList = line.split()
             if(innerList):
-                result.append(innerList)
-    return result
+                sequences.append(innerList)
+    return sequences
 
 def different_letters( lines ):
     seen = []
@@ -26,11 +26,23 @@ def count_apperances(letter, sequences, position):
     return counter
 
 def create_count_matrix(sequences):
-    letters = sequences[0].length
-    different_letters = different_letters(sequences)
-    count_matrix = np.zeros((different_letters, letters))
-    for i in range(0, different_letters):
+    letters = len(sequences[0])
+    different_letters1 = different_letters(sequences)
+    count_matrix = np.zeros((len(different_letters1), letters))
+    for i in range(0, len(different_letters1)):
         for j in range(0, letters):
             count_matrix[i][j] = count_apperances(different_letters(j), sequences, i)
     return count_matrix
+
+readsequences = read_sequences_from_file("input.txt")
+result = create_count_matrix(readsequences)
+print(result)
+
+
+             
+    
+    
+    
+    
+    
 
