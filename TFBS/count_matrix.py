@@ -2,14 +2,18 @@ from math import log
 import numpy as np
 import argparse
 
+
+
+FREQs = {'a': .2, 't': 0.2, 'c': .3, 'g': .3}
+
 def read_sequences_from_file(fname):
-    result = []
+    sequences = []
     with open(fname) as f:
         for line in f:
-            innerList = line.split()
+            innerList = [ ch for ch in line.rstrip()]
             if(innerList):
                 sequences.append(innerList)
-    return sequences
+    return np.array(sequences)
 
 
 def different_letters( lines ):
@@ -25,18 +29,31 @@ def count_apperances(letter, sequences, position):
     counter = 0
     for sequence in sequences():
         if(sequence[position] == letter):
-            counter+=1
+            counter += 1
     return counter
 
 
-def create_count_matrix(sequences):
-    letters = len(sequences[0])
-    different_letters1 = different_letters(sequences)
-    count_matrix = np.zeros((len(different_letters1), letters))
-    for i in range(0, len(different_letters1)):
-        for j in range(0, letters):
-            count_matrix[i][j] = count_apperances(different_letters(j), sequences, i)
-    return count_matrix
+def create_pwm_count_matrix(sequences, aas):
+    count_matrix = np.zeros((aas.shape[0], sequences.shape[1]))
+    for i, ch in enumerate(aas):
+        count_matrix[i,:] = (sequences == ch).sum(axis=0)
+
+    return np.matrix(count_matrix)
+
+def create_pwm_freq_matrix( pwm_count, pseudo_count=None, back_freq=None):
+    if pseudo_count is not None and back_freq is not None:
+        # creates a 2D array with one column that contains the data and multiplies its rows by pseudo_count value
+        back_freq_column = back_freq * pseudo_count
+        # increases each cell of freqs by the value corresponding to its back_freq_column row
+        freqs = pwm_count + back_freq_column
+        return freqs / freqs.sum(axis=0)
+
+    return pwm_count / pwm_count.sum(axis=0)
+
+def print_matrix( m, precision=2):
+    for i in range(m.shape[0]):
+        print ", ".join(["%.*f" %(precision, num) for num in m[i].getA1()])
+    print("")
 
 
 
@@ -49,6 +66,35 @@ if __name__ == "__main__":
                         default=None,
                         help="File containing sequences")
 
-    readsequences = read_sequences_from_file("input.txt")
-    result = create_count_matrix(readsequences)
-    print(result)
+    sequences = read_sequences_from_file("input.txt")
+
+    AAs = np.unique(sequences)
+    PI = np.array([FREQs[a] for a in AAs]) # one array
+    PI = PI[:, np.newaxis] #2D array with one column
+
+    PWM_count = create_pwm_count_matrix(sequences, AAs)
+    print("PI:")
+    for i in range(PI.shape[0]):
+        print("%s: %f"% (AAs[i], PI[i][0]))
+
+    print("\nPWM count")
+    print(PWM_count)
+    print("\nPWM freq")
+    print("With pseudocounts 0")
+    pwm = create_pwm_freq_matrix(PWM_count)
+    assert(np.sum(pwm.sum(axis=0)) == pwm.shape[1]) # checks everything is normalized
+    print_matrix(pwm)
+    print("With pseudocounts 1")
+    pwm = create_pwm_freq_matrix(PWM_count, pseudo_count=1, back_freq=PI)
+    assert (np.sum(pwm.sum(axis=0)) == pwm.shape[1])
+    print_matrix(pwm)
+    print("With pseudocounts 2")
+    pwm = create_pwm_freq_matrix(PWM_count, pseudo_count=2, back_freq=PI)
+    assert (np.sum(pwm.sum(axis=0)) == pwm.shape[1])
+    print_matrix(pwm)
+
+    print("With pseudocounts 4")
+    pwm = create_pwm_freq_matrix(PWM_count, pseudo_count=4, back_freq=PI)
+    assert (np.sum(pwm.sum(axis=0)) == pwm.shape[1])
+    print_matrix(pwm)
+
