@@ -2,12 +2,11 @@ from math import log, ceil
 
 import sys
 from matplotlib import transforms
-import matplotlib as mpl
-from matplotlib.font_manager import FontProperties
 import matplotlib.patheffects
 import matplotlib.pyplot as plt
 import numpy as np
-#import seaborn
+
+
 
 
 COLOR_SCHEME = {'A': 'black',
@@ -37,8 +36,6 @@ COLOR_SCHEME = {'A': 'black',
                 'Y': 'deeppink',
                 'Z': 'darkorchid'}
 
-plt.style.use('seaborn-ticks')
-
 
 def different_letters( lines ):
     """Returns an array with the different letters contained by the array of lines"""
@@ -54,7 +51,7 @@ def background_freq( aas, seqs ):
     """Computes the background freq"""
     freq = np.zeros((aas.shape[0]))
     for i, ch in enumerate( aas ):
-        freq[i] = np.sum( seqs == ch)
+        freq[i] = np.sum(seqs == ch)
     return freq
 
 
@@ -95,6 +92,7 @@ def relative_entropy( probs, pi, seqs):
         RH[j] = -accum
     return RH
 
+
 def contributions( probs, rel_ent):
     C = np.zeros(probs.shape)
     for i in range(probs.shape[0]):
@@ -120,37 +118,30 @@ def get_from_file(fname):
 
 
 def create_scores( probs , aas):
-    """Creates the scores for the plot"""
+    """Creates the scores for the plot, and sorts them"""
     scores = []
     for i in range(probs.shape[1]):
         position = []
         for j in range(aas.shape[0]):
-            if C[j][i] != 0.0:
+            if C[j][i] > 0.0:
                 position.append((aas[j],C[j][i]))
-        scores.append(position)
+        scores.append(sorted(position, key=lambda x:x[1]))
 
     return scores
 
 
-def sort_scores(scores_to_sort):
-    """sorts the scores with regards to the second value in the nested list"""
-    sorted_list = []
-    for i in scores_to_sort:
-        i = sorted(i, key = lambda x: x[1])
-        sorted_list.append(i)
-    return sorted_list
-
-
-def show_contributions_table( contributions ):
+def show_table( contributions ):
     """Pretty prints the contributions table with 5 decimals"""
     for i in range(contributions.shape[0]):
         for j in range(contributions.shape[1]):
             print "%.5f" % contributions[i][j],
+            #print contributions[i][j],
         print
 
 
 def most_likely_word(contributions, aas):
     print ''.join(aas[np.argmax(contributions, axis=0)])
+
 
 class Scale(matplotlib.patheffects.RendererBase):
     def __init__(self, sx, sy=None):
@@ -167,57 +158,53 @@ def draw_logo(all_scores, size=40, filename="plot.png", ymax=2):
     if sys.platform == 'win32':
         font_family = 'Arial'
     else:
-        font_family = 'DejaVu Sans'
+        font_family = 'sans-serif'
 
-    mpl.rcParams['font.family'] = font_family
 
-    fig, ax = plt.subplots(figsize=(len(all_scores), 5))
 
-    font = FontProperties()
-    font.set_size(size)
-    font.set_weight('bold')
+
+    fig, ax = plt.subplots()
+    fig.set_size_inches(len(all_scores), 5)  ###
+    ax.set_xticks(range(1,len(all_scores)+1))
+    ax.set_yticks(range(0, ymax))
+    ax.set_xticklabels(range(1,len(all_scores)+1))
+    ax.set_yticklabels(np.arange(0, ymax))
+
     
-    font.set_family(font_family)
-
-    ax.set_xticks(range(1,len(all_scores)+1))    
-    ax.set_yticks(range(0,ymax))
-    ax.set_xticklabels(range(1,len(all_scores)+1), rotation=90)
-    ax.set_yticklabels(np.arange(0,ymax))
-    #seaborn.despine(ax=ax, trim=True)
-    
-    trans_offset = transforms.offset_copy(ax.transData, 
+    trans_offset = transforms.offset_copy(ax.transAxes,
                                           fig=fig, 
-                                          x=1, 
+                                          x=0,
                                           y=0, 
-                                          units='dots')
-   
+                                          units='points')
+    xshift = 0
     for index, scores in enumerate(all_scores):
-        yshift = 0
         for base, score in scores:
-            txt = ax.text(index + 1,
+            txt = ax.text(0.0555,
                           0, 
                           base, 
                           transform=trans_offset,
-                          fontsize=size,
+                          fontsize=70,
                           color=COLOR_SCHEME[base],
+                          weight='bold',
                           ha='center',
-                          fontproperties=font,
+                          family=font_family)
 
-                         )
-            txt.set_path_effects([Scale(0.7, score)])
+            txt.set_clip_on(False)
+            txt.set_path_effects([Scale(1.0, score)])
             fig.canvas.draw()
             window_ext = txt.get_window_extent(txt._renderer)
-            yshift = window_ext.height * score
-            trans_offset = transforms.offset_copy(txt._transform, 
-                                                  fig=fig,
+            yshift = window_ext.height * (score * .6) ###
+            trans_offset = transforms.offset_copy(txt._transform, fig=fig,
                                                   y=yshift,
                                                   units='points')
-        trans_offset = transforms.offset_copy(ax.transData, 
-                                              fig=fig, 
-                                              x=1, 
-                                              y=0, 
+        xshift += window_ext.width * 0.8  ###
+        trans_offset = transforms.offset_copy(ax.transAxes, fig=fig,
+                                              x=xshift,
                                               units='points')
     plt.savefig( filename )
+
+    #plt.show()
+
 
 if __name__ == '__main__':
 
@@ -244,16 +231,16 @@ if __name__ == '__main__':
     I = information_content(P, AAs, RH)
 
     # we use the same function, but its not the contributions
-    information_whateva = contributions
-    C = -1 * information_whateva(P, I)
+    #information_whateva = contributions
+    #C = -1 * information_whateva(P, I)
     #
     print
     print "Contributions:"
     print
-    show_contributions_table( C )
+    show_table( C )
     # computing the scores from the contributions and que array of letters
     scores = create_scores(C, AAs)
-    sorted_scores = sort_scores(scores)
+    #sorted_scores = sort_scores(scores)
 
     print
     print "The most likely word is:"
@@ -264,7 +251,8 @@ if __name__ == '__main__':
     print "Storing plot in file: " + plot_file
     print
 
-    ymax = int(ceil(log(max(np.sum(C,axis=0)), 2)))
-    draw_logo(sorted_scores, filename=plot_file, ymax=ymax)
+    ymax = int(ceil(max(np.sum(C,axis=0))))
+    draw_logo(scores, filename=plot_file, ymax=ymax)
+    #draw_logo2(scores)
 
     print "BYE"
