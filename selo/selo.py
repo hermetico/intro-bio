@@ -102,7 +102,7 @@ def contributions( probs, rel_ent):
     return C
 
 
-def information_content( probs, aas, rel_ent):
+def information_content(aas, rel_ent):
     return log(aas.shape[0]) -rel_ent
 
 
