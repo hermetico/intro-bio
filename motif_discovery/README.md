@@ -12,11 +12,11 @@ sudo apt install python-tk
 ### Running seqmotif
 In order to run the code just run
 
-python seqmotif.py -f filename [ -l motif_length  -th threshold -o seqlogo.png]
+python seqmotif.py -f input_filename [ -l motif_length  -th threshold -o seqlogo.png]
 
 If no -l or -o are added, seqmotif will assume length 19 and output a file called 'seqlogo.png'.
--th is used to assumed when a position in Z could be a starting point, and also to check if the results have converged.
-If no threshold is addes, seqmotif will use 0.01.
+-th is used to accept an starting position in Z, and also to check if the results have converged.
+If no threshold is added, seqmotif will use 0.01.
 
 Made with love by
 

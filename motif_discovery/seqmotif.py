@@ -86,16 +86,13 @@ class EMA(object):
         or using all the positions above a certain threshold"""
         motifs = []
         if uniques:
-            starting = z.argmax(axis=1)
-            # creates the candidate motif
-            for i, start in enumerate(starting):
-                motifs.append(seqs[i, start:start + self.len_motifs])
-
+            starting = enumerate(z.argmax(axis=1)) # the maximum sarting
         else:
-            starting = np.argwhere(z > self.threshold) ## this threshold is also important!!
-            # creates the candidate motif
-            for i, start in starting:
-                motifs.append(seqs[i, start:start + self.len_motifs])
+            starting = np.argwhere(z > self.threshold) # all above a certain threshold
+
+        # creates the candidate motif
+        for i, start in starting:
+            motifs.append(seqs[i, start:start + self.len_motifs])
 
         return np.array(motifs)
 
