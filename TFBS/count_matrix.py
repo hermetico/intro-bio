@@ -3,6 +3,7 @@ import argparse
 import seq_logo_plot
 import math
 FREQs = {'a': .2, 't': .2, 'c': .3, 'g': .3}
+#FREQs = {'a': .1, 't': .7, 'c': .1, 'g': .1}
 
 
 def read_sequences_from_file(fname):
@@ -95,7 +96,7 @@ if __name__ == "__main__":
     print("\nPWM freq")
 
 
-    for pseudocount in [0, 1, 3, 5]:
+    for pseudocount in [0, 1, 4, 10]:
         print("With pseudocounts %i" %(pseudocount))
         if pseudocount == 0:
             pwm = create_pwm_freq_matrix(PWM_count)
@@ -104,14 +105,14 @@ if __name__ == "__main__":
 
         assert(np.sum(pwm.sum(axis=0)) == pwm.shape[1]) # checks everything is normalized
         print_matrix(pwm)
-        """
+
         RH = create_relative_entropy(pwm, PI)
         C = pwm * RH  # contributions
 
         scores = ploter.create_scores(C, AAs)
 
         ploter.draw_logo(C, AAs, filename="seq-logo%i.png" %(pseudocount))
-        """
+
 
 
     probs = create_pwm_freq_matrix(PWM_count)
