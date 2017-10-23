@@ -155,7 +155,7 @@ class EMA(object):
         diff = np.inf
         iters = 0
 
-        while diff > 0:#self.threshold: ## threshold is important!!
+        while diff > 0.01:#self.threshold: ## threshold is important!!
             # compute new Z
             Zt, Tht = self.__iterate__(self.SEQs, self.Z, self.Th)
 
