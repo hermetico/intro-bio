@@ -73,6 +73,7 @@ def plot(forward_data, reverse_data, peaks):
     # lines for strands
     plt.fill(x, y, '-', linewidth=2,
                      label='Forward strand', color='b')
+
     plt.fill(x, y2, '-', linewidth=2,
                      label='Reverse strand', color='r')
 
@@ -135,7 +136,7 @@ if __name__ == "__main__":
     ## CHECK thiS
     #reverse_strand = reverse_strand[::-1]
     # b)
-    k = 5 #4
+    k = 4
     # naive
     #forward_smooth = smooth_array(forward_strand, k)
     #reverse_smooth = smooth_array(reverse_strand, k)
