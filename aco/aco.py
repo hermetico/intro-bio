@@ -147,13 +147,13 @@ class ACO(object):
                 next_node = rem_neighbors[0]
             route.append(next_node)
             rem_nodes[next_node] = 0
-            route_distance += self.distances[self.__correct_pair__(current, next_node)]
+            route_distance += distances[self.__correct_pair__(current, next_node)]
             remaining -= 1
             current = next_node
 
         # appends the initial node to complete the route
         route.append(init)
-        route_distance += self.distances[self.__correct_pair__(current,  init)]
+        route_distance += distances[self.__correct_pair__(current,  init)]
 
         return route, route_distance
 
@@ -192,7 +192,7 @@ if __name__ == "__main__":
     parser.add_argument("-b", "--beta", required=False, type=float, default=2.0, help="Beta value should be >= 1")
     parser.add_argument("-e", "--evaporation", required=False, type=float, default=0.5, help="Evaporation value 0-1")
     parser.add_argument("-n", "--ants", required=False, type=int, default=15, help="Num of ants")
-    parser.add_argument("-v", "--visualization", required=False, action='store_true', help="Visualize routes")
+    parser.add_argument("-v", "--visualization", required=False, action='store_true', help="Visualize routes on real time")
 
     args = parser.parse_args()
 
