@@ -115,14 +115,13 @@ public class Main {
             writer = new PrintWriter(filename);
             for(int centroid = 0; centroid < centroids; centroid++ )
             {
-                writer.print(centroid);
+                //writer.print(centroid);
                 for(int id = 0; id < assignations.length; id++)
                 {
                     if( assignations[id] == centroid) {
-                        writer.print("\t" + ids_from_index.get(id));
+                        writer.print(ids_from_index.get(id) + "\t" + centroid + "\n");
                     }
                 }
-                writer.print("\n");
             }
             writer.close();
             System.out.println("Output stored at " + filename);
