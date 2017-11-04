@@ -1,6 +1,6 @@
 import numpy as np
 import argparse
-import math
+
 
 def read_input( filename ):
     data = []
