@@ -110,9 +110,8 @@ public class Main {
     public void writeOutput(int[] assignations)
     {
         PrintWriter writer = null;
-        String filename  = this.centroids + "_" + this.outputFileName;
         try {
-            writer = new PrintWriter(filename);
+            writer = new PrintWriter(this.outputFileName);
             for(int centroid = 0; centroid < centroids; centroid++ )
             {
                 //writer.print(centroid);
@@ -124,7 +123,7 @@ public class Main {
                 }
             }
             writer.close();
-            System.out.println("Output stored at " + filename);
+            System.out.println("Output stored at " + this.outputFileName);
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
