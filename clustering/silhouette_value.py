@@ -49,6 +49,7 @@ def centers( c_ids, c_values ):
     '''Returns the centers of each cluster'''
     return np.array([ np.mean(c_values[cluster], axis=0) for cluster in c_ids])
 
+
 def euclidean(a, b):
     """Calculate the euclidean distance for two points"""
     return np.linalg.norm(a - b)
@@ -103,7 +104,7 @@ def compute_s_values( a_values, b_values):
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("-f", "--file", required=True, type=str, default=None, help="File containing results")
-    parser.add_argument("-g", "--genes", required=True, type=str, default=None, help="File containing gene expressions standards")
+    parser.add_argument("-g", "--genes", required=True, type=str, default=None, help="File containing gene expressions")
 
 
     args = parser.parse_args()
