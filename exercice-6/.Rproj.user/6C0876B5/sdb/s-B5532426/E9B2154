@@ -1,0 +1,21 @@
+{
+    "collab_server" : "",
+    "contents" : "# computes the mapping into a strand\n# a)\ncompute_mappings <- function(mappings, strand) \n{\n  for(i in 1:nrow(mappings)) \n  {\n    init <- mappings$init[i]\n    end <- mappings$end[i]\n    #increase every position from init to end by 1\n    strand[init:end] <- strand[init:end] + 1\n  }\n  return(strand)\n}\n\n# smooths the signal\n# b)\nsmooth_strands <-function(data, k)\n{\n  filter_size <- (2*k) + 1\n  padding <- rep(0, k)\n  data <- c(padding, data, padding)\n  filtered <-filter(data, rep(1/filter_size, filter_size))\n  return (na.omit(filtered))\n}\n\nlibrary(readr)\nmappings <- read_delim(\"mappings.txt\", \" \", escape_double = FALSE, \n                       col_names = c(\"init\", \"end\", \"direction\"), trim_ws = TRUE)\n\n# adapt it to R standards\nmappings$init <- mappings$init + 1\nmappings$end <- mappings$end + 1\nView(mappings)\n\nforward_mappings <- mappings[mappings$direction == \"+\",]\nreverse_mappings <- mappings[mappings$direction == \"-\",] \n\nbase_pairs <- 1000\n\n# strands\nstrands <- data.frame(\"forward\"= rep(0, base_pairs), \"reverse\"=rep(0, base_pairs))\n\n# compute mappings\nstrands$forward <- compute_mappings(forward_mappings, strands$forward)\nstrands$reverse <- compute_mappings(reverse_mappings, strands$reverse)\n\n\n# do the smoothing\nsmooth_frame <-data.frame(\"forward\"= rep(0, base_pairs), \"reverse\"=rep(0, base_pairs))\nk <- 5\nsmooth_frame$forward <- smooth_strands(strands$forward, 5)\nsmooth_frame$reverse <- smooth_strands(strands$reverse, 5)\n\n\nplot(strands$forward)\n\n",
+    "created" : 1508335571911.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "225787512",
+    "id" : "E9B2154",
+    "lastKnownWriteTime" : 1508415648,
+    "last_content_update" : 1508415648926,
+    "path" : "/media/hermetico/2TB/dev/bioinformatics/exercice-6/code.R",
+    "project_path" : null,
+    "properties" : {
+        "tempName" : "Untitled1"
+    },
+    "relative_order" : 2,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_source"
+}

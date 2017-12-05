@@ -1,0 +1,29 @@
+{
+    "collab_server" : "",
+    "contents" : "",
+    "created" : 1508757087562.000,
+    "dirty" : false,
+    "encoding" : "",
+    "folds" : "",
+    "hash" : "0",
+    "id" : "C3880A06",
+    "lastKnownWriteTime" : 7957695009229111298,
+    "last_content_update" : 1508757087562,
+    "path" : null,
+    "project_path" : null,
+    "properties" : {
+        "cacheKey" : "5BCBF6EB",
+        "caption" : "pairs_df",
+        "contentUrl" : "grid_resource/gridviewer.html?env=&obj=pairs_df&cache_key=5BCBF6EB",
+        "displayedObservations" : 1000,
+        "environment" : "",
+        "object" : "pairs_df",
+        "preview" : 0,
+        "totalObservations" : 1000,
+        "variables" : 3
+    },
+    "relative_order" : 7,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_dataframe"
+}

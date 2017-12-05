@@ -1,0 +1,23 @@
+{
+    "collab_server" : "",
+    "contents" : "",
+    "created" : 1508335571911.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "2369951187",
+    "id" : "E9B2154",
+    "lastKnownWriteTime" : 1508759464,
+    "last_content_update" : 1508759464680,
+    "path" : "/media/hermetico/2TB/dev/bioinformatics/exercice-6/code.R",
+    "project_path" : null,
+    "properties" : {
+        "cursorPosition" : "119,0",
+        "scrollLine" : "103",
+        "tempName" : "Untitled1"
+    },
+    "relative_order" : 1,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_source"
+}

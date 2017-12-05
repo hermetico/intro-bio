@@ -1,0 +1,356 @@
+library(readr)
+mappings <- read_delim("/media/hermetico/2TB/dev/bioinformatics/exercice-6/mappings.txt",
+" ", escape_double = FALSE, col_names = c("init", "end", "direction"),
+col_types = cols(X1 = col_integer(),
+X2 = col_integer()), trim_ws = TRUE)
+View(mappings)
+View(mappings)
+View(mappings)
+library(readr)
+mappings <- read_delim("/media/hermetico/2TB/dev/bioinformatics/exercice-6/mappings.txt",
+" ", escape_double = FALSE, col_names = c("init", "end", "direction"),
+trim_ws = TRUE)
+View(mappings)
+mappings["init"]
+View(mappings)
+library(readr)
+mappings <- read_delim("mappings.txt", " ", escape_double = FALSE, col_names = c("init", "end", "direction"),
+trim_ws = TRUE)
+View(mappings)
+forward_mappings <- mappings[mappings$direction == "+"]
+mappings[mappings$direction == "+"]
+mappings[mappings$direction = "+"]
+mappings
+mappings$direction =='+'
+mappings$direction =="+"
+mappings[mappings$direction =='+']
+mappings$direction =='+'
+mappings[mappings$direction =='+',]
+mappings[mappings$direction == "+",][mappings$init, mappings$end]
+mappings[mappings$direction == "+",]
+reverse_mappings <- mappings[mappings$direction == "-",]
+len(forward_mappings)
+length(forward_mappings)
+length(forward_mappings[0])
+length(forward_mappings[0,])
+nrow(forward_mappings)
+forward_mappings <- mappings[mappings$direction == "+",]
+nrow(forward_mappings)
+forward_strand <- rep(0, nrow(forward_mappings))
+# reverse strand
+reverse_strand <- rep(0, nrow(reverse_mappings))
+View(forward_strand)
+strands <- data.frame(0, ncol=2, nrow=base_pairs, col_names=c("forward", "reverse"))
+base_pairs <- 1000
+strands <- data.frame(0, ncol=2, nrow=base_pairs, col_names=c("forward", "reverse"))
+View(strands)
+strands
+strands <- data.frame(col_names=c("forward", "reverse"))
+View(strands)
+strands$forward <- rep(0, 1000)
+strands$forward <- rep(0, 1000)
+strands <- data.frame("forward"= rep(0, base_pairs), "reverse"=rep(0, base_pairs))
+View(strands)
+strands$forward[0:10]
+forward_mappings$init[8]
+forward_mappings$init[7]
+forward_mappings[9]$init
+for(i in 1:nrow(forward_mappings))
+{
+init <- forward_mappings$init[i]
+end <- forward_mappings$end[i]
+strands$forward[init:end] + 1
+}
+View(strands)
+View(strands)
+for(i in 1:nrow(forward_mappings))
+{
+init <- forward_mappings$init[i]
+end <- forward_mappings$end[i]
+strands$forward[init:end] <- strands$forward[init:end] + 1
+}
+View(strands)
+View(strands)
+View(mappings)
+View(forward_mappings)
+code
+code.R
+source("code.R", echo = TRUE)
+}
+compute_mappings <- function(strand, mappings)
+{
+for(i in 1:nrow(mappings))
+{
+init <- mappings$init[i]
+end <- mappings$end[i]
+#increase every position from init to end by 1
+strand[init:end] <- strand[init:end] + 1
+}
+return(strand)
+}
+compute_mappings(strands$forward, forward_mappings)
+{
+for(i in 1:nrow(mappings))
+{
+init <- mappings$init[i]
+end <- mappings$end[i]
+#increase every position from init to end by 1
+strand[init:end] <- strand[init:end] + 1
+}
+return(strand)
+}
+strands$reverse <- compute_mappings(reverse_mappings, strands$reverse)
+View(reverse_mappings)
+compute_mappings(reverse_mappings, strands$reverse)
+compute_mappings <- function(mappings, strand)
+{
+for(i in 1:nrow(mappings))
+{
+init <- mappings$init[i]
+end <- mappings$end[i]
+#increase every position from init to end by 1
+strand[init:end] <- strand[init:end] + 1
+}
+return(strand)
+}
+compute_mappings(reverse_mappings, strands$reverse)
+View(strands)
+strands$reverse <- compute_mappings(reverse_mappings, strands$reverse)
+filter(strands$forward, rep(1/11,11))
+smooth_strands(data, k)
+{
+filter_size <- 2*k + 1
+filtered <-filter(data, rep(1/filter_size, filter_size))
+return (filtered[k:-k])
+}
+smooth_strands <-function(data, k)
+{
+filter_size <- 2*k + 1
+filtered <-filter(data, rep(1/filter_size, filter_size))
+return (filtered[k:-k])
+}
+smooth_strands(strands$forward, 5)
+for(i in 1:50)
+{
+sum(strands$forward[i-k:i+k])
+}
+k <- 5
+for(i in 1:50)
+{
+sum(strands$forward[i-k:i+k])
+}
+for(i in 1:50)
+{
+sum(strands$forward[i-k:i+k])
+}
+k
+for(i in 1:50)
+{
+sum(strands$forward[i-k:i+k])
+}
+for(i in 1:50)
+{
+strands$forward[i-k:i+k]
+}
+strands$forward[8-k:8+k]
+strands$forward[8-k,8+k]
+strands$forward[8-k:8+k,]
+strands$forward
+strands$forward[k:]
+strands$forward[k:k]
+strands$forward[k]
+strands$forward[k:k+1]
+strands$forward[k:k+2]
+strands$forward[k:k+3]
+for(i in 1:50)
+{
+init <- i-k
+end <- i + k
+strands$forward[init:end]
+}
+for(i in 5:50)
+{
+init <- i-k
+end <- i + k
+strands$forward[init:end]
+}
+for(i in 5:50)
+{
+init <- i-k
+end <- i + k
+print(strands$forward[init:end])
+}
+for(i in 1:50)
+{
+init <- i-k
+end <- i + k
+if(init < 0){
+init <- 0
+}
+if(end > base_pairs)
+{
+end <- base_pairs
+}
+print(strands$forward[init:end])
+}
+for(i in 1:nrow(strands))
+{
+init <- i - k
+end <- i + k
+if(init < 0){
+init <- 0
+}
+if(end > 1000)
+{
+end <- 1000
+}
+#print(strands$forward[init:end])
+smooth_frame$forward[i] <- sum(strands$forward[init:end]) / 2 * k + 1
+}
+smooth_frame <-data.frame("forward"= rep(0, base_pairs), "reverse"=rep(0, base_pairs))
+k <- 5
+for(i in 1:nrow(strands))
+plot(strands$forward)
+plot(strands$forward)
+plot(strands$forward)
+View(smooth_frame)
+for(i in 1:nrow(strands))
+{
+init <- i - k
+end <- i + k
+if(init < 0){
+init <- 0
+}
+if(end > 1000)
+{
+end <- 1000
+}
+#print(strands$forward[init:end])
+smooth_frame$forward[i] <- sum(strands$forward[init:end]) / (2 * k) + 1
+}
+plot(cars)
+strands$forward[-5:5]
+strands$forward[1]
+strands$forward[0]
+k <- 5
+for(i in 1:nrow(strands))
+{
+init <- i - k
+end <- i + k
+if(init < 1){
+init <- 1
+}
+if(end > 1000)
+{
+end <- 1000
+}
+#print(strands$forward[init:end])
+smooth_frame$forward[i] <- sum(strands$forward[init:end]) / (2 * k) + 1
+}
+smooth_strands <-function(data, k)
+{
+filter_size <- 2*k + 1
+filtered <-filter(data, rep(1/filter_size, filter_size))
+return (filtered[k:length(data)])
+}
+smooth_strands(strands$forward, 5)
+smooth_strands <-function(data, k)
+{
+filter_size <- 2*k + 1
+filtered <-filter(data, rep(1/filter_size, filter_size))
+return (na.omit(filtered))
+}
+smooth_strands(strands$forward, 5)
+smooth_frame$reverse <- smooth_strands(strands$forward, 5)
+filter_size <- 11
+filter(strands$forward, rep(1/filter_size, filter_size))
+smooth_strands <-function(data, k)
+{
+filter_size <- 2*k + 1
+padding <- rep(0, k)
+data <- c(padding, data, padding)
+filtered <-filter(data, rep(1/filter_size, filter_size))
+return (na.omit(filtered))
+}
+smooth_frame$reverse <- smooth_strands(strands$forward, 5)
+smooth_strands(strands$forward, 5)
+smooth_strands <-function(data, k)
+{
+filter_size <- (2*k) + 1
+padding <- rep(0, k)
+data <- c(padding, data, padding)
+filtered <-filter(data, rep(1/filter_size, filter_size))
+return (na.omit(filtered))
+}
+smooth_strands(strands$forward, 5)
+compute_mappings <- function(mappings, strand)
+{
+for(i in 1:nrow(mappings))
+{
+init <- mappings$init[i]
+end <- mappings$end[i]
+#increase every position from init to end by 1
+strand[init:end] <- strand[init:end] + 1
+}
+return(strand)
+}
+# smooths the signal
+# b)
+smooth_strands <-function(data, k)
+{
+filter_size <- (2*k) + 1
+padding <- rep(0, k)
+data <- c(padding, data, padding)
+filtered <-filter(data, rep(1/filter_size, filter_size))
+return (na.omit(filtered))
+}
+library(readr)
+mappings <- read_delim("mappings.txt", " ", escape_double = FALSE,
+col_names = c("init", "end", "direction"), trim_ws = TRUE)
+# adapt it to R standards
+mappings <- mappings + 1
+View(mappings)
+forward_mappings <- mappings[mappings$direction == "+",]
+reverse_mappings <- mappings[mappings$direction == "-",]
+base_pairs <- 1000
+# strands
+strands <- data.frame("forward"= rep(0, base_pairs), "reverse"=rep(0, base_pairs))
+# compute mappings
+strands$forward <- compute_mappigns(forward_mappings, strands$forward)
+strands$reverse <- compute_mappings(reverse_mappings, strands$reverse)
+smooth_frame$reverse <- smooth_strands(strands$forward, 5)
+smooth_frame <-data.frame("forward"= rep(0, base_pairs), "reverse"=rep(0, base_pairs))
+smooth_frame$reverse <- smooth_strands(strands$forward, 5)
+strands <- data.frame("forward"= rep(0, base_pairs), "reverse"=rep(0, base_pairs))
+strands$forward <- compute_mappigns(forward_mappings, strands$forward)
+strands$reverse <- compute_mappings(reverse_mappings, strands$reverse)
+library(readr)
+mappings <- read_delim("mappings.txt", " ", escape_double = FALSE,
+col_names = c("init", "end", "direction"), trim_ws = TRUE)
+mappings$init <- mappings$init + 1
+mappings$end <- mappings$end + 1
+View(mappings)
+forward_mappings <- mappings[mappings$direction == "+",]
+reverse_mappings <- mappings[mappings$direction == "-",]
+base_pairs <- 1000
+strands <- data.frame("forward"= rep(0, base_pairs), "reverse"=rep(0, base_pairs))
+strands$forward <- compute_mappigns(forward_mappings, strands$forward)
+strands$reverse <- compute_mappings(reverse_mappings, strands$reverse)
+strands$forward <- compute_mappigns(forward_mappings, strands$forward)
+strands$forward <- compute_mappings(forward_mappings, strands$forward)
+smooth_frame$reverse <- smooth_strands(strands$forward, 5)
+k <- 5
+for(i in 1:nrow(strands))
+{
+init <- i - k
+end <- i + k
+if(init < 1){
+init <- 1
+}
+if(end > 1000)
+{
+end <- 1000
+}
+#print(strands$forward[init:end])
+smooth_frame$forward[i] <- sum(strands$forward[init:end]) / (2 * k) + 1
+}

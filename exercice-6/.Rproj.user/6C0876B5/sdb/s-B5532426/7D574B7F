@@ -1,0 +1,29 @@
+{
+    "collab_server" : "",
+    "contents" : "",
+    "created" : 1508337940284.000,
+    "dirty" : false,
+    "encoding" : "",
+    "folds" : "",
+    "hash" : "0",
+    "id" : "7D574B7F",
+    "lastKnownWriteTime" : 2,
+    "last_content_update" : 1508337940284,
+    "path" : null,
+    "project_path" : null,
+    "properties" : {
+        "cacheKey" : "F7141C3E",
+        "caption" : "strands",
+        "contentUrl" : "grid_resource/gridviewer.html?env=&obj=strands&cache_key=F7141C3E",
+        "displayedObservations" : "1000",
+        "environment" : "",
+        "object" : "strands",
+        "preview" : "0",
+        "totalObservations" : "1000",
+        "variables" : "2"
+    },
+    "relative_order" : 3,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_dataframe"
+}
